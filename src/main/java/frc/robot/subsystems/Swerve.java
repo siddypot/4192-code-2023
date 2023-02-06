@@ -156,8 +156,14 @@ public class Swerve extends SubsystemBase {
     }
 
 
-    public double getPosX (){ //pos x is not relative to anything, watch out
+    public double getPosX (){ //get displacement is not relative to NWSE
         return -gyro.getDisplacementY();
     }
 
+    public double getPitch(){ //in degrees
+        return gyro.getPitch();
+    }
+    public double getRoll(){ 
+        return gyro.getRoll();
+    }
 }
