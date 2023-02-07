@@ -45,12 +45,19 @@ public class RobotContainer {
     private final JoystickButton robotCentric = new JoystickButton(driver, 1);
     private final JoystickButton align = new JoystickButton(driver, 5);
     private final JoystickButton xWheel = new JoystickButton(driver, 3);
+    private final JoystickButton autoBalance = new JoystickButton(driver, 4);
+
 
 
     /* Subsystems */
+
     private final Swerve swerve = new Swerve();
+    //private final Intake intake = new Intake();
+
+
     private final autoAlign align1 = new autoAlign(swerve);
     private final xWheels xwheel = new xWheels(swerve);
+    private final autoBalance ab = new autoBalance(swerve);
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -80,6 +87,8 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> swerve.resetGyro()));
         align.whileTrue(align1);
         xWheel.whileTrue(xwheel);
+        autoBalance.whileTrue(ab);
+
     }
 
     /**
