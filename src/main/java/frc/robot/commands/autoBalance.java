@@ -9,7 +9,7 @@ import frc.robot.subsystems.Swerve;
 
 public class autoBalance extends CommandBase{
     private final Swerve swerve;
-    private final PIDController pid = new PIDController(.075, 0, 0);
+    private final PIDController pid = new PIDController(.075, 0, 0); //to be tuned
 
     public autoBalance(Swerve s){
 

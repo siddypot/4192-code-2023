@@ -9,7 +9,7 @@ import frc.robot.subsystems.Swerve;
 
 public class tunetranslationalpid extends CommandBase{
     private final Swerve swerve;
-    private final PIDController pid = new PIDController(.5, 0, 0);
+    private final PIDController pid = new PIDController(.5, 0, 0); //to be tuned
 
     public tunetranslationalpid(Swerve s){
 

@@ -69,9 +69,7 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    SmartDashboard.putNumber("Limelight X dist", getOffsetYaw());
-    SmartDashboard.putNumber("Limelight Y dist", getOffsetPitch());
+    
   }
 
 }

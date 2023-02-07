@@ -159,12 +159,11 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.update(getYaw(), getModulePositions());
         poseEstimator.update(getYaw(), getModulePositions());
         poseEstimator.addVisionMeasurement(limelight.getPose2d(),  Timer.getFPGATimestamp());
-        SmartDashboard.putNumber("Yaw", gyro.getYaw()); 
-        SmartDashboard.putNumber("roll", getRoll()); 
 
-        for(SwerveModule mod : mSwerveMods){
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-        }
+
+        SmartDashboard.putNumber("Yaw", gyro.getYaw()); 
+        SmartDashboard.putNumber("Roll", getRoll()); 
+
 
     }
 }

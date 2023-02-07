@@ -7,7 +7,7 @@ import frc.robot.subsystems.*;
 
 public class autoAlign extends CommandBase{
 
-    PIDController pid = new PIDController(.15, 0, .000005);
+    PIDController pid = new PIDController(.15, 0, .000005); //tuned
 
     private Swerve swerve;
     public autoAlign(Swerve s){
