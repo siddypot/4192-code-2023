@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -50,8 +51,8 @@ public class RobotContainer {
 
 
     /* Subsystems */
-
-    private final Swerve swerve = new Swerve();
+    private final Limelight limelight = new Limelight(getAllianceColor());
+    private final Swerve swerve = new Swerve(limelight);
 
 
     private final autoAlign align1 = new autoAlign(swerve);
@@ -130,6 +131,18 @@ public class RobotContainer {
         );
         
         return finalAutonCommand;
+    }
+
+
+    public boolean getAllianceColor(){ //only if blue
+
+        String color = DriverStation.getAlliance().toString();
+
+        if(color.equals("Blue")) {
+
+            return true;
+        }
+        return false;
     }
 }
 
