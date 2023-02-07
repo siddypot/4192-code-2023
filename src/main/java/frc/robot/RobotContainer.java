@@ -52,7 +52,6 @@ public class RobotContainer {
     /* Subsystems */
 
     private final Swerve swerve = new Swerve();
-    //private final Intake intake = new Intake();
 
 
     private final autoAlign align1 = new autoAlign(swerve);
