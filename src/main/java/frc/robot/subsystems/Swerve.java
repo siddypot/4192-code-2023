@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -28,20 +29,16 @@ public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public static AHRS gyro;
     public static double startAngle;
+    public SwerveDrivePoseEstimator poseEstimator; 
+    private final Limelight limelight;
 
 
-    public Consumer<SwerveModuleState[]> consumer = value -> {
+    
+    
 
-        SwerveDriveKinematics.desaturateWheelSpeeds(value, Constants.Swerve.maxSpeed);
-        
-        for(SwerveModule mod : mSwerveMods){
-            mod.setDesiredState(value[mod.moduleNumber], false);
-        }
-
-    };
-
-    public Swerve() {
+    public Swerve(Limelight l) {
         gyro = new AHRS(SPI.Port.kMXP);
+        limelight = l;
         //gyro.configFactoryDefault();
         resetGyro();
 
@@ -59,6 +56,7 @@ public class Swerve extends SubsystemBase {
         resetModulesToAbsolute();
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
+        poseEstimator= new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions(), getPose());
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -94,6 +92,7 @@ public class Swerve extends SubsystemBase {
     public Pose2d getPose() {
         return swerveOdometry.getPoseMeters();
     }
+    
 
     public void resetOdometry(Pose2d pose) {
         swerveOdometry.resetPosition(getYaw(), getModulePositions(), pose);
@@ -158,6 +157,8 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic(){
         swerveOdometry.update(getYaw(), getModulePositions());
+        poseEstimator.update(getYaw(), getModulePositions());
+        poseEstimator.addVisionMeasurement(limelight.getPose2d(),  Timer.getFPGATimestamp());
         SmartDashboard.putNumber("Yaw", gyro.getYaw()); 
         SmartDashboard.putNumber("roll", getRoll()); 
 
