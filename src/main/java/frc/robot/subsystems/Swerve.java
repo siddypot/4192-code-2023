@@ -138,17 +138,6 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    @Override
-    public void periodic(){
-        swerveOdometry.update(getYaw(), getModulePositions());
-        SmartDashboard.putNumber("Yaw", gyro.getYaw()); 
-        SmartDashboard.putNumber("roll", getRoll()); 
-
-        for(SwerveModule mod : mSwerveMods){
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
-        }
-
-    }
 
     public void resetPosX(){
         gyro.resetDisplacement();
@@ -164,5 +153,17 @@ public class Swerve extends SubsystemBase {
     }
     public double getRoll(){ 
         return (gyro.getRoll() - 1.8700999);
+    }
+
+    @Override
+    public void periodic(){
+        swerveOdometry.update(getYaw(), getModulePositions());
+        SmartDashboard.putNumber("Yaw", gyro.getYaw()); 
+        SmartDashboard.putNumber("roll", getRoll()); 
+
+        for(SwerveModule mod : mSwerveMods){
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());
+        }
+
     }
 }
