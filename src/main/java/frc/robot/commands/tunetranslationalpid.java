@@ -9,7 +9,7 @@ import frc.robot.subsystems.Swerve;
 
 public class tunetranslationalpid extends CommandBase{
     private final Swerve swerve;
-    private final PIDController pid = new PIDController(.5, 0, 0); //to be tuned
+    private final PIDController pid = new PIDController(7.5 , 0, .5); //to be tuned
 
     public tunetranslationalpid(Swerve s){
 
@@ -21,9 +21,9 @@ public class tunetranslationalpid extends CommandBase{
 
         double offset = swerve.getPosX(); //not right??
 
-        swerve.drive(new Translation2d(pid.calculate(offset, 0),0),0,true, true);
+        swerve.drive(new Translation2d(0,pid.calculate(offset, 0)),0,true, true);
     
 
     }
     
-}
+};

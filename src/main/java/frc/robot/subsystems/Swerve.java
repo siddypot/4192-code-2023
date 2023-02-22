@@ -114,14 +114,7 @@ public class Swerve extends SubsystemBase {
         return positions;
     }
 
-    public void resetGyro(){
-        gyro.zeroYaw();
-        
-        gyro.reset();
-        gyro.resetDisplacement();
-        startAngle = 0;
-
-    }
+    
 
     public Rotation2d getYaw() {
         return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - gyro.getYaw()) : Rotation2d.fromDegrees(gyro.getYaw());
@@ -143,8 +136,15 @@ public class Swerve extends SubsystemBase {
     }
 
 
-    public double getPosX (){ //get displacement is not relative to NWSE
-        return -gyro.getDisplacementY();
+    public double getPosX (){  //get displacement is not relative to NWSE
+
+        //return -gyro.getDisplacementX();
+        return swerveOdometry.getPoseMeters().getY();
+
+    }
+
+    public double getPosePosX(){
+        return 0;
     }
 
     public double getPitch(){ //in degrees
@@ -162,8 +162,26 @@ public class Swerve extends SubsystemBase {
 
 
         SmartDashboard.putNumber("Yaw", gyro.getYaw()); 
+        SmartDashboard.putNumber("xPos", getPosX());
         SmartDashboard.putNumber("Roll", getRoll()); 
 
 
+        for(SwerveModule mod : mSwerveMods){
+            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Cancoder", mod.getCanCoder().getDegrees());}
+
+
     }
+
+    public void resetGyro(){
+        gyro.zeroYaw();
+        gyro.resetDisplacement();
+        gyro.reset();
+
+
+        
+        startAngle = 0;
+
+    }
+
+
 }

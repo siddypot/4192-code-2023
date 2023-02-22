@@ -9,6 +9,7 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -28,6 +29,8 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
+    private final Joystick opps = new Joystick(1);
+
 
 
     /* Drive Controls */
@@ -42,17 +45,26 @@ public class RobotContainer {
     private final JoystickButton align = new JoystickButton(driver, 5);
     private final JoystickButton xWheel = new JoystickButton(driver, 3);
     private final JoystickButton autoBalance = new JoystickButton(driver, 4);
+    private final JoystickButton tunePid = new JoystickButton(driver, 6);
+
+    private final JoystickButton eleUp = new JoystickButton(opps,0);
+    private final JoystickButton eleDown = new JoystickButton(opps, 1);
 
 
     /* Subsystems */
     private final Limelight limelight = new Limelight(getAllianceColor());
     private final Swerve swerve = new Swerve(limelight);
+    private final Elevator elevator = new Elevator();
 
 
     /* Commands */
     private final autoAlign align1 = new autoAlign(swerve);
     private final xWheels xwheel = new xWheels(swerve);
     private final autoBalance ab = new autoBalance(swerve);
+    private final tunetranslationalpid tunePID = new tunetranslationalpid(swerve);
+    private final raiseTheEle whatsUpDawg = new raiseTheEle(elevator, true);
+    private final raiseTheEle downToTheGround = new raiseTheEle(elevator, false);
+
 
 
     public RobotContainer() {
@@ -70,10 +82,16 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         /* Driver Buttons */
+        
         zeroGyro.onTrue(new InstantCommand(() -> swerve.resetGyro()));
         align.whileTrue(align1);
         xWheel.whileTrue(xwheel);
         autoBalance.whileTrue(ab);
+        tunePid.whileTrue(tunePID);
+
+        eleUp.whileTrue(whatsUpDawg);
+        eleDown.whileTrue(downToTheGround);
+        
     }
     public Command getAutonomousCommand() {
 
