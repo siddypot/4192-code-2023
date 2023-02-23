@@ -3,13 +3,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Elevator;
 
-public class elbowOut extends CommandBase{
+public class elbowIn extends CommandBase{
 
     private final Elevator e;
-    private boolean out;
-    public elbowOut(Elevator e, boolean out){
+    private boolean in;
+    public elbowIn(Elevator e, boolean in){
         this.e = e;
-        this.out = out;
+        this.in = in;
     }
 
 
@@ -19,7 +19,7 @@ public class elbowOut extends CommandBase{
         //true to go out 
         //false to move back 
         
-        e.extendElbow();
+        e.retractElbow();
 
     }
     @Override

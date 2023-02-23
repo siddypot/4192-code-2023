@@ -3,27 +3,29 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.led.RgbFadeAnimation;
 import com.fasterxml.jackson.databind.ser.std.CalendarSerializer;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Elevator {
+public class Elevator extends SubsystemBase{
 
 
     private final CANSparkMax lGrippa;
     private final CANSparkMax rGrippa;
 
 
-    private final CANSparkMax leftEle;
-    private final CANSparkMax rightEle;
+    public final CANSparkMax leftEle;
+    public final CANSparkMax rightEle;
 
     private final CANSparkMax elbow;
     private final CANSparkMax wrist;
 
 
-    PIDController leftPID = new PIDController(1, 0, 0);
-    PIDController rightPID = new PIDController(1, 0, 0);
+    PIDController PID = new PIDController(1, 0, 0);
+    
 
     PIDController elbowPID = new PIDController(1, 0, 0);
 
@@ -31,7 +33,7 @@ public class Elevator {
     public Elevator(){
 
         elbow = new CANSparkMax(3, MotorType.kBrushless);
-        wrist = new CANSparkMax(4, MotorType.kBrushless);
+        wrist = new CANSparkMax(4,MotorType.kBrushless);
 
 
         leftEle = new CANSparkMax(1, MotorType.kBrushless);
@@ -45,8 +47,7 @@ public class Elevator {
 
 
 
-        leftEle.setInverted(true);
-        rightEle.setInverted(false);
+        
 
 
         motorSetup(rightEle);
@@ -61,7 +62,12 @@ public class Elevator {
         rGrippa.setSmartCurrentLimit(10);
         lGrippa.setSmartCurrentLimit(10);
 
+        leftEle.setInverted(true);
+        rightEle.setInverted(false);
 
+        lGrippa.setInverted(true);
+
+        wrist.setSmartCurrentLimit(15);
 
         
     }
@@ -70,19 +76,64 @@ public class Elevator {
     public void motorSetup(CANSparkMax c){
         c.setSmartCurrentLimit(20);
         c.restoreFactoryDefaults();
+        c.setIdleMode(IdleMode.kBrake);
     }
     public void raiseEle(double goalHeight){
 
-        rightEle.set(rightPID.calculate(rightEle.getEncoder().getPosition(), goalHeight));
-        leftEle.set(leftPID.calculate(leftEle.getEncoder().getPosition(), goalHeight));
+        rightEle.set(PID.calculate(rightEle.getEncoder().getPosition(), goalHeight));
+        leftEle.set(PID.calculate(leftEle.getEncoder().getPosition(), goalHeight));
 
     }
 
     public void raiseElePower(){
 
-        leftEle.set(.1);
-        rightEle.set(-.05);
+        leftEle.set(.2);
+        rightEle.set(.2);
 
+    }
+
+    public void DownraiseElePower(){
+
+        leftEle.set(-.2);
+        rightEle.set(-.2);
+
+    }
+
+    public void intakePower(){
+        lGrippa.set(-1);
+        rGrippa.set(-1);
+    }
+
+    public void intakeIdle(){
+        lGrippa.set(0);
+        rGrippa.set(0);
+    }
+
+    public void outtakePower(){
+        lGrippa.set(.5);
+        rGrippa.set(.5);
+    }
+
+    public void outtakeIdle(){
+        lGrippa.set(0);
+        rGrippa.set(0);
+    }
+
+    public void zeroEle(){
+
+        leftEle.set(0.01);
+        rightEle.set(0.01);
+    }
+
+    public void movewrist(){
+        wrist.set(.6);
+    }
+    public void movewrisNt(){
+        wrist.set(-.6);
+    }
+
+    public void idleWrist(){
+        wrist.set(.0);
     }
 
     public void wearescrewed(){} // method to set the elevator to one motor mode and the other becomes follower
@@ -95,8 +146,8 @@ public class Elevator {
 
         double goalHeight = 0;
 
-        leftEle.set(rightPID.calculate(rightEle.getEncoder().getPosition(), goalHeight));
-        rightEle.set(rightPID.calculate(rightEle.getEncoder().getPosition(), goalHeight));
+        leftEle.set(PID.calculate(rightEle.getEncoder().getPosition(), goalHeight));
+        rightEle.set(PID.calculate(rightEle.getEncoder().getPosition(), goalHeight));
     }
 
 
@@ -124,11 +175,25 @@ public class Elevator {
 
     }
 
+    public void extendElbow(){
+        elbow.set(.2);
+    }
+
+    public void retractElbow(){
+        elbow.set(-.17);
+    }
+
+    @Override
     public void periodic(){
+
         SmartDashboard.putNumber("rightmoroPos", rightEle.getEncoder().getPosition());
         SmartDashboard.putNumber("leftMotorPos", leftEle.getEncoder().getPosition());
         SmartDashboard.putNumber("elbow", elbow.getEncoder().getPosition());
 
+    }
+
+    public void idleElbow(){
+        elbow.set(.01);
     }
 
     

@@ -47,8 +47,17 @@ public class RobotContainer {
     private final JoystickButton autoBalance = new JoystickButton(driver, 4);
     private final JoystickButton tunePid = new JoystickButton(driver, 6);
 
-    private final JoystickButton eleUp = new JoystickButton(opps,0);
-    private final JoystickButton eleDown = new JoystickButton(opps, 1);
+    private final JoystickButton eleUp = new JoystickButton(opps,1);
+    private final JoystickButton eleDown = new JoystickButton(opps, 2);
+    private final JoystickButton wristUp = new JoystickButton(opps, 3);
+    private final JoystickButton wristDawn = new JoystickButton(opps, 4);
+    private final JoystickButton elbowout = new JoystickButton(opps, 5);
+    private final JoystickButton elbowin = new JoystickButton(opps, 6);
+    private final JoystickButton intake = new JoystickButton(opps, 7);
+    private final JoystickButton outtake = new JoystickButton(opps, 8);
+    
+
+
 
 
     /* Subsystems */
@@ -62,8 +71,16 @@ public class RobotContainer {
     private final xWheels xwheel = new xWheels(swerve);
     private final autoBalance ab = new autoBalance(swerve);
     private final tunetranslationalpid tunePID = new tunetranslationalpid(swerve);
-    private final raiseTheEle whatsUpDawg = new raiseTheEle(elevator, true);
-    private final raiseTheEle downToTheGround = new raiseTheEle(elevator, false);
+    private final raiseTheEle whatsUpDawg = new raiseTheEle(elevator);
+    private final downEle downToTheGround = new downEle(elevator);
+    private final wirst goUp = new wirst(elevator);
+    private final wirstN goDon = new wirstN(elevator);
+    private final elbowIn extend = new elbowIn(elevator, true);
+    private final elbowOut retract = new elbowOut(elevator, true);
+    private final intake in = new intake(elevator);
+    private final outtake out = new outtake(elevator);
+
+
 
 
 
@@ -89,8 +106,19 @@ public class RobotContainer {
         autoBalance.whileTrue(ab);
         tunePid.whileTrue(tunePID);
 
+
         eleUp.whileTrue(whatsUpDawg);
         eleDown.whileTrue(downToTheGround);
+
+        wristUp.whileTrue(goUp);
+        wristDawn.whileTrue(goDon);
+
+        elbowout.whileTrue(extend);
+        elbowin.whileTrue(retract);
+
+        outtake.whileTrue(out);
+        intake.whileTrue(in);
+
         
     }
     public Command getAutonomousCommand() {

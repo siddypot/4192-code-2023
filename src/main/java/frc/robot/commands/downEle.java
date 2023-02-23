@@ -2,7 +2,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.*;
 
-public class raiseTheEle extends CommandBase {
+public class downEle extends CommandBase {
 
     
     private final Elevator e;
@@ -10,7 +10,7 @@ public class raiseTheEle extends CommandBase {
 
     private int upElevatorPos = 0;
     private int downElevatorPos = 0;
-    public raiseTheEle(Elevator ele){
+    public downEle(Elevator ele){
         this.up = up;
         e = ele;
     }
@@ -19,9 +19,8 @@ public class raiseTheEle extends CommandBase {
     @Override
     public void execute(){
 
-        e.raiseElePower();
+        e.DownraiseElePower();
 
-        
         
     }
 
