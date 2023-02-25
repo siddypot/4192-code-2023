@@ -22,7 +22,7 @@ public class raiseTheEle extends CommandBase {
     @Override
     public void execute(){
 
-        double elevatorPower = MathUtil.applyDeadband(power, Constants.stickDeadband);
+        double elevatorPower =  - MathUtil.applyDeadband(power, Constants.stickDeadband);
         double elbowPower = MathUtil.applyDeadband(powa, Constants.stickDeadband);
 
 

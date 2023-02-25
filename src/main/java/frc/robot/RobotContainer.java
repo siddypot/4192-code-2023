@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.util.sendable.SendableBuilder.BackendKind;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -20,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -38,8 +39,12 @@ public class RobotContainer {
     private final int strafeAxis = 0;
     private final int rotationAxis = 2;
 
-    private final int elevatorUpAxis = 00;
-    private final int elbowOutAxis = 0;
+    private final int elevatorUpAxis = 5; //neg
+    private final int elbowOutAxis = 4;
+
+    private final int spinCWtrigga = 3;
+    private final int spinCCWtrigga = 2;
+
 
 
 
@@ -53,14 +58,14 @@ public class RobotContainer {
     private final JoystickButton tunePid = new JoystickButton(driver, 6);
 
     private final JoystickButton eleUp = new JoystickButton(opps,1);
-    private final JoystickButton eleDown = new JoystickButton(opps, 2);
+    private final JoystickButton sdi = new JoystickButton(opps, 2);
     private final JoystickButton wristUp = new JoystickButton(opps, 3);
     private final JoystickButton wristDawn = new JoystickButton(opps, 4);
     private final JoystickButton elbowout = new JoystickButton(opps, 5);
     private final JoystickButton elbowin = new JoystickButton(opps, 6);
-    private final JoystickButton intake = new JoystickButton(opps, 7);
-    private final JoystickButton outtake = new JoystickButton(opps, 8);
-    
+   
+    private final Trigger intake = new Trigger(() -> opps.getRawAxis(spinCWtrigga) > .2);
+    private final Trigger outtake = new Trigger(() -> opps.getRawAxis(spinCCWtrigga) > .2);
 
 
 
@@ -80,9 +85,8 @@ public class RobotContainer {
     private final wirstN goDon = new wirstN(elevator);
     private final elbowIn extend = new elbowIn(elevator, true);
     private final elbowOut retract = new elbowOut(elevator, true);
-    private final intake in = new intake(elevator);
-    private final outtake out = new outtake(elevator);
-
+    private final spinnything spindaGrippa = new spinnything(elevator, spinCWtrigga);
+    private final spinnything backDaGrippa = new spinnything(elevator, spinCCWtrigga);
 
 
 
@@ -97,7 +101,9 @@ public class RobotContainer {
                 () -> robotCentric.getAsBoolean()
             )
         );
-        elevator.setDefaultCommand(new raiseTheEle(elevator, opps.getRawAxis(elevatorUpAxis), opps.getRawAxis(elbowOutAxis)));
+        elevator.setDefaultCommand(new raiseTheEle(
+                elevator, opps.getRawAxis(elevatorUpAxis),
+                 opps.getRawAxis(elbowOutAxis)));
         configureButtonBindings();
     }
 
@@ -114,9 +120,10 @@ public class RobotContainer {
         wristDawn.whileTrue(goDon);
 
 
-        outtake.whileTrue(out);
-        intake.whileTrue(in);
+        outtake.whileTrue(spindaGrippa);
+        intake.whileTrue(backDaGrippa);
 
+        
         
     }
     public Command getAutonomousCommand() {

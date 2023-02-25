@@ -7,6 +7,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -23,6 +26,8 @@ public class Elevator extends SubsystemBase{
     private final CANSparkMax elbow;
     private final CANSparkMax wrist;
 
+    private final DoubleSolenoid inSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 8, 9);
+
 
     PIDController PID = new PIDController(1, 0, 0);
     
@@ -31,6 +36,8 @@ public class Elevator extends SubsystemBase{
 
 
     public Elevator(){
+
+        
 
         elbow = new CANSparkMax(3, MotorType.kBrushless);
         wrist = new CANSparkMax(4,MotorType.kBrushless);
@@ -94,32 +101,17 @@ public class Elevator extends SubsystemBase{
 
     }
 
-    public void DownraiseElePower(){
 
-        leftEle.set(-.2);
-        rightEle.set(-.2);
-
+    public void intakePower(double playa){
+        lGrippa.set(playa);
+        rGrippa.set(playa);
     }
 
-    public void intakePower(){
-        lGrippa.set(-1);
-        rGrippa.set(-1);
+    public void idleIntake(){
+        lGrippa.set(0.01);
+        rGrippa.set(0.01);
     }
 
-    public void intakeIdle(){
-        lGrippa.set(0);
-        rGrippa.set(0);
-    }
-
-    public void outtakePower(){
-        lGrippa.set(.5);
-        rGrippa.set(.5);
-    }
-
-    public void outtakeIdle(){
-        lGrippa.set(0);
-        rGrippa.set(0);
-    }
 
     public void zeroEle(){
 
@@ -127,15 +119,9 @@ public class Elevator extends SubsystemBase{
         rightEle.set(0.01);
     }
 
-    public void movewrist(){
-        wrist.set(.6);
-    }
-    public void movewrisNt(){
-        wrist.set(-.6);
-    }
 
     public void idleWrist(){
-        wrist.set(.0);
+        wrist.set(0);
     }
 
     public void wearescrewed(){} // method to set the elevator to one motor mode and the other becomes follower
