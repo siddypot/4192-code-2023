@@ -62,9 +62,11 @@ public class Elevator extends SubsystemBase{
         rGrippa.setSmartCurrentLimit(10);
         lGrippa.setSmartCurrentLimit(10);
 
+
         leftEle.setInverted(true);
         rightEle.setInverted(false);
 
+        
         lGrippa.setInverted(true);
 
         wrist.setSmartCurrentLimit(15);
@@ -74,7 +76,7 @@ public class Elevator extends SubsystemBase{
 
 
     public void motorSetup(CANSparkMax c){
-        c.setSmartCurrentLimit(20);
+        c.setSmartCurrentLimit(30);
         c.restoreFactoryDefaults();
         c.setIdleMode(IdleMode.kBrake);
     }
@@ -85,10 +87,10 @@ public class Elevator extends SubsystemBase{
 
     }
 
-    public void raiseElePower(){
+    public void raiseElePower(double speed){
 
-        leftEle.set(.2);
-        rightEle.set(.2);
+        leftEle.set(.4 * speed);
+        rightEle.set(.4 * speed);
 
     }
 
@@ -177,6 +179,10 @@ public class Elevator extends SubsystemBase{
 
     public void extendElbow(){
         elbow.set(.2);
+    }
+
+    public void doElbowThing(double speed){
+        elbow.set(speed * .3);
     }
 
     public void retractElbow(){

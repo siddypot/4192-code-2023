@@ -38,6 +38,11 @@ public class RobotContainer {
     private final int strafeAxis = 0;
     private final int rotationAxis = 2;
 
+    private final int elevatorUpAxis = 00;
+    private final int elbowOutAxis = 0;
+
+
+
     /* Driver Buttons */                                                                        
 
     private final JoystickButton zeroGyro = new JoystickButton(driver, 2);
@@ -71,8 +76,6 @@ public class RobotContainer {
     private final xWheels xwheel = new xWheels(swerve);
     private final autoBalance ab = new autoBalance(swerve);
     private final tunetranslationalpid tunePID = new tunetranslationalpid(swerve);
-    private final raiseTheEle whatsUpDawg = new raiseTheEle(elevator);
-    private final downEle downToTheGround = new downEle(elevator);
     private final wirst goUp = new wirst(elevator);
     private final wirstN goDon = new wirstN(elevator);
     private final elbowIn extend = new elbowIn(elevator, true);
@@ -94,6 +97,7 @@ public class RobotContainer {
                 () -> robotCentric.getAsBoolean()
             )
         );
+        elevator.setDefaultCommand(new raiseTheEle(elevator, opps.getRawAxis(elevatorUpAxis), opps.getRawAxis(elbowOutAxis)));
         configureButtonBindings();
     }
 
@@ -106,15 +110,9 @@ public class RobotContainer {
         autoBalance.whileTrue(ab);
         tunePid.whileTrue(tunePID);
 
-
-        eleUp.whileTrue(whatsUpDawg);
-        eleDown.whileTrue(downToTheGround);
-
         wristUp.whileTrue(goUp);
         wristDawn.whileTrue(goDon);
 
-        elbowout.whileTrue(extend);
-        elbowin.whileTrue(retract);
 
         outtake.whileTrue(out);
         intake.whileTrue(in);
