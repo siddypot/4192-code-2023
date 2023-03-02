@@ -4,11 +4,29 @@
 
 package frc.robot;
 
-import edu.wpi.first.hal.REVPHJNI;
+import edu.wpi.first.cameraserver.CameraServer;
+
+import edu.wpi.first.cscore.CvSink;
+
+import edu.wpi.first.cscore.CvSource;
+
+import edu.wpi.first.cscore.UsbCamera;
+
+import edu.wpi.first.wpilibj.TimedRobot;
+
+import org.opencv.core.Mat;
+
+import org.opencv.core.Point;
+
+import org.opencv.core.Scalar;
+
+import org.opencv.imgproc.Imgproc;
+
+
+
+import edu.wpi.first.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.PneumaticsBase;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -36,7 +54,7 @@ public class Robot extends TimedRobot {
 
 
   
-
+  Thread m_visionThread;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -49,11 +67,34 @@ public class Robot extends TimedRobot {
     
     A.enableDigital();
 
+    /*m_visionThread =
 
+        new Thread(
 
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+            () -> {
+
+            UsbCamera camera = CameraServer.startAutomaticCapture();
+
+              camera.setResolution(160, 120);
+              camera.setVideoMode(PixelFormat.kMJPEG, 160, 120, 120);
+              CvSink cvSink = CameraServer.getVideo();
+
+              CvSource outputStream = CameraServer.putVideo("Rectangle", 160, 120);
+
+              Mat mat = new Mat();
+              while (!Thread.interrupted()) {
+                if (cvSink.grabFrame(mat) == 0) {
+                  outputStream.notifyError(cvSink.getError());
+                  continue;
+                }
+                Imgproc.rectangle(
+                    mat, new Point(100, 100), new Point(50, 50), new Scalar(255, 255, 255), 5);
+                outputStream.putFrame(mat);
+              }
+            });
+    m_visionThread.setDaemon(true);
+    m_visionThread.start();
+    m_robotContainer = new RobotContainer();*/
   }
 
   /**

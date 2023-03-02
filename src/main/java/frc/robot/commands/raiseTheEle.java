@@ -42,7 +42,6 @@ public class raiseTheEle extends CommandBase {
 
     @Override
     public void end(boolean interupt){
-        e.zeroEle();
     }
     
 }

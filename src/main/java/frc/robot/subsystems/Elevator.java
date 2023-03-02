@@ -78,7 +78,6 @@ public class Elevator extends SubsystemBase{
         
         lGrippa.setInverted(true);
 
-        wrist.setSmartCurrentLimit(15);
 
         
     }
@@ -102,8 +101,8 @@ public class Elevator extends SubsystemBase{
 
     public void raiseElePower(double speed){
 
-        leftEle.set(.4 * speed);
-        rightEle.set(.4 * speed);
+        leftEle.set(.8 * speed);
+        rightEle.set(.8 * speed);
 
     }
 
