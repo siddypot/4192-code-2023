@@ -7,9 +7,11 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -23,10 +25,10 @@ public class Elevator extends SubsystemBase{
     public final CANSparkMax leftEle;
     public final CANSparkMax rightEle;
 
-    private final CANSparkMax elbow;
+    public final CANSparkMax elbow;
     private final CANSparkMax wrist;
 
-    private final DoubleSolenoid inSolenoid = new DoubleSolenoid(PneumaticsModuleType.REVPH, 8, 9);
+    private final DoubleSolenoid inSolenoid = new DoubleSolenoid(1, PneumaticsModuleType.REVPH, 8, 9);
 
 
     PIDController PID = new PIDController(1, 0, 0);
@@ -37,7 +39,7 @@ public class Elevator extends SubsystemBase{
 
     public Elevator(){
 
-        
+
 
         elbow = new CANSparkMax(3, MotorType.kBrushless);
         wrist = new CANSparkMax(4,MotorType.kBrushless);
@@ -87,10 +89,14 @@ public class Elevator extends SubsystemBase{
         c.restoreFactoryDefaults();
         c.setIdleMode(IdleMode.kBrake);
     }
-    public void raiseEle(double goalHeight){
+    public void raiseRight(double goalHeight){
 
         rightEle.set(PID.calculate(rightEle.getEncoder().getPosition(), goalHeight));
-        leftEle.set(PID.calculate(leftEle.getEncoder().getPosition(), goalHeight));
+
+    }
+
+    public void raiseLeft(double height){
+        leftEle.set(PID.calculate(leftEle.getEncoder().getPosition(), height));
 
     }
 
@@ -112,16 +118,41 @@ public class Elevator extends SubsystemBase{
         rGrippa.set(0.01);
     }
 
+    public void Close(){
+        inSolenoid.set(Value.kReverse);
+    }
 
-    public void zeroEle(){
+    public void Open(){
+        inSolenoid.set(Value.kForward);
+    }
 
-        leftEle.set(0.01);
-        rightEle.set(0.01);
+    public boolean getIfOpen(){
+        return (inSolenoid.get().equals(Value.kForward));
+    }
+
+
+    public void moveElbow(double position){
+        
+        elbow.set(elbowPID.calculate(elbow.getEncoder().getPosition(), position));
+
+    }
+
+
+
+public void zeroEle(){
+
+        leftEle.set(0.095);
+        rightEle.set(0.095);
     }
 
 
     public void idleWrist(){
         wrist.set(0);
+    }
+
+    
+    public void flickofdawrist(double power){
+        wrist.set(power * .8);
     }
 
     public void wearescrewed(){} // method to set the elevator to one motor mode and the other becomes follower

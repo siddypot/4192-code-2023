@@ -7,10 +7,14 @@ import frc.robot.subsystems.Elevator;
 
 public class tuneVert extends CommandBase{
     
-    PIDController pid = new PIDController(0, 0, 0);
+    PIDController pid = new PIDController(1, 0, 0);
+
+    private final double value;
 
     private final Elevator e;
-    public tuneVert(Elevator e){
+    public tuneVert(Elevator e, double value){
+
+        this.value = value;
 
         this.e=e;
 
@@ -19,11 +23,18 @@ public class tuneVert extends CommandBase{
     @Override
     public void execute(){
 
-        double middlevalue = 40;
-        
-        double offset = e.leftEle.getEncoder().getPosition();
+    
+        e.raiseLeft(value);
+        e.raiseRight(value);
 
-        e.raiseEle(pid.calculate(offset,middlevalue));
+    }
+
+    @Override
+    public boolean isFinished(){
+
+        return (
+            e.leftEle.getEncoder().getPosition() == value && 
+            e.rightEle.getEncoder().getPosition() == value);
 
     }
 

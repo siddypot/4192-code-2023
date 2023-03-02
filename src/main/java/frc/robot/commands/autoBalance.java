@@ -9,7 +9,7 @@ import frc.robot.subsystems.Swerve;
 
 public class autoBalance extends CommandBase{
     private final Swerve swerve;
-    private final PIDController pid = new PIDController(.075, 0, 0); //to be tuned
+    private final PIDController pid = new PIDController(.060, 0, .005); //to be tuned
 
     public autoBalance(Swerve s){
 
@@ -20,9 +20,11 @@ public class autoBalance extends CommandBase{
     @Override
     public void execute(){
 
-        double offset = -swerve.getRoll() - 0;
+        double offset = swerve.getRoll() - 0;
 
-        swerve.drive(new Translation2d(pid.calculate(offset, 0),0),0,true, true);
+        swerve.drive(
+            new Translation2d(pid.calculate(offset, 0),0),
+            0,true, true);
     
 
     }

@@ -4,7 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.hal.REVPHJNI;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsBase;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -21,6 +26,10 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
 
+  Compressor A = new Compressor(1, PneumaticsModuleType.REVPH);
+    PneumaticHub ph = new PneumaticHub(1);
+  
+
   private RobotContainer m_robotContainer;
 
 
@@ -35,6 +44,13 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     ctreConfigs = new CTREConfigs();
+
+    ph.enableCompressorDigital();
+    
+    A.enableDigital();
+
+
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
@@ -49,6 +65,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+
+
+    
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic

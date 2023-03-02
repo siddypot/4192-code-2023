@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import javax.lang.model.element.Element;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -8,9 +10,9 @@ import frc.robot.subsystems.Elevator;
 public class spinnything extends CommandBase{
 
     private final Elevator e;
-    private double power;
+    private DoubleSupplier power;
 
-    public spinnything(Elevator e, double power){
+    public spinnything(Elevator e, DoubleSupplier power){
         this.e = e;
         this.power = power;
     }
@@ -18,7 +20,7 @@ public class spinnything extends CommandBase{
 
     @Override
     public void execute(){
-        e.intakePower(power);
+        e.intakePower( power.getAsDouble());
 
     }
 

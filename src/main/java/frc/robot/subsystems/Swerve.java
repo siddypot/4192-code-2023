@@ -56,7 +56,7 @@ public class Swerve extends SubsystemBase {
         resetModulesToAbsolute();
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions());
-        poseEstimator= new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions(), getPose());
+        poseEstimator= new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getYaw(), getModulePositions(), new Pose2d());
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -90,7 +90,7 @@ public class Swerve extends SubsystemBase {
     }    
 
     public Pose2d getPose() {
-        return swerveOdometry.getPoseMeters();
+        return poseEstimator.getEstimatedPosition();
     }
     
 
@@ -148,10 +148,10 @@ public class Swerve extends SubsystemBase {
     }
 
     public double getPitch(){ //in degrees
-        return gyro.getPitch();
+        return (gyro.getPitch() - 0);
     }
     public double getRoll(){ 
-        return (gyro.getRoll() - 1.8700999);
+        return (gyro.getRoll() - 1.5499);
     }
 
     @Override
@@ -159,11 +159,14 @@ public class Swerve extends SubsystemBase {
         swerveOdometry.update(getYaw(), getModulePositions());
         poseEstimator.update(getYaw(), getModulePositions());
         poseEstimator.addVisionMeasurement(limelight.getPose2d(),  Timer.getFPGATimestamp());
+        
 
 
         SmartDashboard.putNumber("Yaw", gyro.getYaw()); 
         SmartDashboard.putNumber("xPos", getPosX());
         SmartDashboard.putNumber("Roll", getRoll()); 
+        SmartDashboard.putNumber("Pitch", getPitch()); 
+
 
 
         for(SwerveModule mod : mSwerveMods){
